@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import net.crisjac.todo.dto.TodoDto;
 import net.crisjac.todo.entity.Todo;
 import net.crisjac.todo.service.TodoService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +45,17 @@ public class TodoController {
     public ResponseEntity<String> deleteTodo(@PathVariable("id") Long todoId) {
         todoService.deleteTodo(todoId);
         return ResponseEntity.ok("Todo deleted successfully");
+    }
+
+    @PatchMapping("{id}/complete")
+    public ResponseEntity<TodoDto> completeTodo(@PathVariable("id") Long todoId) {
+        TodoDto updatedTodo = todoService.completeTodo(todoId);
+        return ResponseEntity.ok(updatedTodo);
+    }
+
+    @PatchMapping("{id}/in-complete")
+    public ResponseEntity<TodoDto> incompleteTodo(@PathVariable("id") Long todoId) {
+        TodoDto updatedTodo = todoService.incompleteTodo(todoId);
+        return ResponseEntity.ok(updatedTodo);
     }
 }
