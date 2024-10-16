@@ -20,21 +20,12 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public TodoDto addTodo(TodoDto todoDto) {
         // convert ToDo Dto into JPA entity
-//        Todo todo = new Todo();
-//        todo.setTitle(todoDto.getTitle());
-//        todo.setDescription((todoDto.getDescription()));
-//        todo.setCompleted(todoDto.isCompleted());
         Todo todo = modelMapper.map(todoDto, Todo.class);
 
         // Todo Jpa entity
         Todo savedTodo = todoRepository.save(todo);
 
         // Convert saved todo jpa object into TodoDto
-//        TodoDto savedTodoDto = new TodoDto();
-//        savedTodoDto.setId(savedTodo.getId());
-//        savedTodoDto.setTitle(savedTodo.getTitle());
-//        savedTodoDto.setDescription(savedTodo.getDescription());
-//        savedTodoDto.setCompleted(savedTodo.isCompleted());
         TodoDto savedTodoDto = modelMapper.map(savedTodo, TodoDto.class);
 
         return savedTodoDto;
@@ -57,5 +48,29 @@ public class TodoServiceImpl implements TodoService {
                 .stream()
                 .map((todo) -> modelMapper.map(todo, TodoDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public TodoDto updateTodo(TodoDto todoDto, Long id) {
+        Todo todo = todoRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Todo not found with id:" + id));
+
+        todo.setTitle(todoDto.getTitle());
+        todo.setDescription(todoDto.getDescription());
+        todo.setCompleted(todoDto.isCompleted());
+
+        Todo updatedTodo = todoRepository.save(todo);
+
+        return modelMapper.map(updatedTodo, TodoDto.class);
+    }
+
+    @Override
+    public void deleteTodo(Long id) {
+        Todo todo = todoRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Todo not found with id:" +id));
+
+        todoRepository.deleteById(id);
     }
 }
