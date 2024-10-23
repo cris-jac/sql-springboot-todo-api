@@ -47,6 +47,9 @@ public class SpringSecurityConfig {
                     // allow to everyone
 //                    authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll();
 
+                    // allow any user to register or login
+                    authorize.requestMatchers("/api/auth/**").permitAll();
+
                     // only allow request authenticated
                     authorize.anyRequest().authenticated();
                 })
