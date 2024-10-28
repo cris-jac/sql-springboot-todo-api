@@ -1,6 +1,7 @@
 package net.crisjac.todo.controller;
 
 import lombok.AllArgsConstructor;
+import net.crisjac.todo.dto.JwtAuthResponse;
 import net.crisjac.todo.dto.LoginDto;
 import net.crisjac.todo.dto.RegisterDto;
 import net.crisjac.todo.service.AuthService;
@@ -25,8 +26,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
-        String response = authService.login(loginDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto) {
+        String token = authService.login(loginDto);
+
+        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+
+        return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
     }
 }

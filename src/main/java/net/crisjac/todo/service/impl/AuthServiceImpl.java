@@ -8,6 +8,7 @@ import net.crisjac.todo.entity.User;
 import net.crisjac.todo.exception.TodoAPIException;
 import net.crisjac.todo.repository.RoleRepository;
 import net.crisjac.todo.repository.UserRepository;
+import net.crisjac.todo.security.JwtTokenProvider;
 import net.crisjac.todo.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,8 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
 
     private AuthenticationManager authenticationManager;
+
+    private JwtTokenProvider jwtTokenProvider;
 
     @Override
     public String register(RegisterDto registerDto) {
@@ -71,6 +74,10 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "User logged in successfully!";
+        // jwt
+        String token = jwtTokenProvider.generateToken(authentication);
+
+//        return "User logged in successfully!";
+        return token;
     }
 }
